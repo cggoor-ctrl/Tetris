@@ -616,6 +616,7 @@ function clearLines() {
     let prevLines = lines;
     let prevLevel = level;
     
+    // Find all completed lines
     outer: for (let y = board.length - 1; y >= 0; y--) {
         for (let x = 0; x < board[y].length; x++) {
             if (board[y][x] === 0) {
@@ -631,11 +632,16 @@ function clearLines() {
     if (linesCleared > 0) {
         // Animate line clearing
         animateLineClear(linesToClear, () => {
-            // Remove the lines after animation
-            linesToClear.forEach(lineY => {
-                const row = board.splice(lineY, 1)[0].fill(0);
-                board.unshift(row);
-            });
+            // Remove all lines at once, adjusting indices
+            // Sort lines to clear in ascending order to handle index shifts correctly
+            const sortedLinesToClear = [...linesToClear].sort((a, b) => a - b);
+            
+            // Remove lines from top to bottom to avoid index shifting issues
+            for (let i = sortedLinesToClear.length - 1; i >= 0; i--) {
+                const lineIndex = sortedLinesToClear[i];
+                board.splice(lineIndex, 1);
+                board.unshift(new Array(COLS).fill(0));
+            }
             
             // Update score
             const points = [0, 100, 300, 500, 800];
@@ -856,6 +862,11 @@ function gameOver() {
 // Handle keyboard input
 function handleKeyPress(event) {
     if (!gameActive) return;
+    
+    // Prevent scrolling with arrow keys
+    if ([37, 38, 39, 40, 32].includes(event.keyCode)) {
+        event.preventDefault();
+    }
     
     switch (event.keyCode) {
         case 37: // Left arrow
