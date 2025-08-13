@@ -217,6 +217,7 @@ function setupMobileControls() {
     const mobileRight = document.getElementById('mobile-right');
     const mobileRotate = document.getElementById('mobile-rotate');
     const mobileDrop = document.getElementById('mobile-drop');
+    const mobileFullscreen = document.getElementById('mobile-fullscreen');
     
     if (mobileLeft) {
         mobileLeft.addEventListener('click', () => handleMobileInput('left'));
@@ -247,6 +248,14 @@ function setupMobileControls() {
         mobileDrop.addEventListener('touchstart', (e) => {
             e.preventDefault();
             handleMobileInput('drop');
+        });
+    }
+    
+    if (mobileFullscreen) {
+        mobileFullscreen.addEventListener('click', toggleFullscreen);
+        mobileFullscreen.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            toggleFullscreen();
         });
     }
     

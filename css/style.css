@@ -268,12 +268,12 @@ button:active {
     left: 0;
     right: 0;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
 }
 
 .control-btn {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: rgba(0, 168, 255, 0.7);
     color: white;
@@ -282,9 +282,20 @@ button:active {
     justify-content: center;
     align-items: center;
     user-select: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Responsive design for mobile devices with 9:16 aspect ratio */
+.control-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#mobile-fullscreen {
+    background: rgba(255, 107, 107, 0.7);
+    font-size: 20px;
+}
+
+/* Responsive design */
 @media (max-width: 768px), (max-height: 768px) {
     body {
         align-items: flex-start;
