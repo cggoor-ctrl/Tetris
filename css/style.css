@@ -29,12 +29,49 @@ body {
     box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
     /* Add subtle pulse animation */
     animation: pulse 2s infinite;
+    flex-direction: column;
+    align-items: center;
 }
 
 @keyframes pulse {
     0% { box-shadow: 0 0 20px rgba(0, 150, 255, 0.5); }
     50% { box-shadow: 0 0 30px rgba(0, 200, 255, 0.8); }
     100% { box-shadow: 0 0 20px rgba(0, 150, 255, 0.5); }
+}
+
+#top-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#top-controls button {
+    background: linear-gradient(to bottom, #00a8ff, #007bff);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+#top-controls button:hover {
+    background: linear-gradient(to bottom, #00c3ff, #0099ff);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 150, 255, 0.4);
+}
+
+#top-controls button:active {
+    transform: translateY(0);
+}
+
+#fullscreen-btn {
+    background: linear-gradient(to bottom, #ff6b6b, #ff0000);
+}
+
+#fullscreen-btn:hover {
+    background: linear-gradient(to bottom, #ff8e8e, #ff3333);
 }
 
 /* Mobile-first approach for 9:16 aspect ratio */

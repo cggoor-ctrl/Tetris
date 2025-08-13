@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Tetris Neo">
     <title>Tetris Neo</title>
@@ -10,6 +10,11 @@
 </head>
 <body>
     <div id="game-container">
+        <div id="top-controls">
+            <button id="fullscreen-btn">Полный экран</button>
+            <button id="pause-btn">Пауза</button>
+            <button id="restart-btn">Рестарт</button>
+        </div>
         <canvas id="tetris-canvas" width="300" height="600"></canvas>
         <div id="ui-panel">
             <div id="score">Счет: 0</div>
@@ -26,18 +31,11 @@
                 <p>Следующая фигура:</p>
                 <canvas id="next-piece-canvas" width="120" height="120"></canvas>
             </div>
-            <div id="controls">
-                <button id="fullscreen-btn">Полный экран</button>
-                <button id="pause-btn">Пауза</button>
-                <button id="restart-btn">Рестарт</button>
-                <button id="sound-btn">Звук: Вкл</button>
-            </div>
         </div>
     </div>
     
     <!-- Mobile controls -->
     <div id="mobile-controls">
-        <div class="control-btn" id="mobile-fullscreen">⛶</div>
         <div class="control-btn" id="mobile-left">←</div>
         <div class="control-btn" id="mobile-rotate">↻</div>
         <div class="control-btn" id="mobile-right">→</div>

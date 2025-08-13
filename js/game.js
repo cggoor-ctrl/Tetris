@@ -83,26 +83,12 @@ let nextPiece = null;
 let particles = [];
 let floatingTexts = [];
 
-// Audio variables
-let soundEnabled = true;
-let backgroundAudio = new Audio('audio/background.mp3');
-let moveAudio = new Audio('audio/move.mp3');
-let rotateAudio = new Audio('audio/rotate.mp3');
-let dropAudio = new Audio('audio/drop.mp3');
-let clearAudio = new Audio('audio/clear.mp3');
-let gameOverAudio = new Audio('audio/gameover.mp3');
-
-// Set audio properties
-backgroundAudio.loop = true;
-backgroundAudio.volume = 0.3;
-
 // UI elements
 const scoreElement = document.getElementById('score');
 const levelElement = document.getElementById('level');
 const linesElement = document.getElementById('lines');
 const pauseButton = document.getElementById('pause-btn');
 const restartButton = document.getElementById('restart-btn');
-const soundButton = document.getElementById('sound-btn');
 const fullscreenButton = document.getElementById('fullscreen-btn');
 
 // Initialize the game
@@ -128,7 +114,6 @@ function init() {
     document.addEventListener('keydown', handleKeyPress);
     pauseButton.addEventListener('click', togglePause);
     restartButton.addEventListener('click', restartGame);
-    soundButton.addEventListener('click', toggleSound);
     
     // Fullscreen button
     if (fullscreenButton) {
@@ -146,6 +131,10 @@ function init() {
     window.addEventListener('orientationchange', () => {
         setTimeout(adaptCanvasSize, 100); // Small delay to ensure orientation change is complete
     });
+    
+    // Prevent zoom on double tap and pinch gestures on mobile
+    document.addEventListener('touchstart', preventZoom, { passive: false });
+    document.addEventListener('touchmove', preventZoom, { passive: false });
     
     // Start game loop
     requestAnimationFrame(update);
@@ -179,36 +168,12 @@ function adaptCanvasSize() {
 
 // Save settings to localStorage
 function saveSettings() {
-    const settings = {
-        soundEnabled: soundEnabled
-    };
-    localStorage.setItem('tetrisSettings', JSON.stringify(settings));
+    // No settings to save for now
 }
 
 // Load settings from localStorage
 function loadSettings() {
-    const settingsStr = localStorage.getItem('tetrisSettings');
-    if (settingsStr) {
-        try {
-            const settings = JSON.parse(settingsStr);
-            soundEnabled = settings.soundEnabled !== undefined ? settings.soundEnabled : false; // Отключаем звук по умолчанию
-            
-            // Update sound button
-            const soundButton = document.getElementById('sound-btn');
-            if (soundButton) {
-                soundButton.textContent = soundEnabled ? 'Звук: Вкл' : 'Звук: Выкл';
-            }
-        } catch (e) {
-            console.error('Error loading settings:', e);
-        }
-    } else {
-        // Если настроек нет, отключаем звук по умолчанию
-        soundEnabled = false;
-        const soundButton = document.getElementById('sound-btn');
-        if (soundButton) {
-            soundButton.textContent = 'Звук: Выкл';
-        }
-    }
+    // No settings to load for now
 }
 
 // Setup mobile controls
@@ -309,25 +274,19 @@ function handleMobileInput(action) {
             currentPiece.pos.x--;
             if (collide()) {
                 currentPiece.pos.x++;
-            } else {
-                playSound(moveAudio);
             }
             break;
         case 'right':
             currentPiece.pos.x++;
             if (collide()) {
                 currentPiece.pos.x--;
-            } else {
-                playSound(moveAudio);
             }
             break;
         case 'rotate':
             rotatePiece();
-            playSound(rotateAudio);
             break;
         case 'drop':
             dropPiece();
-            playSound(dropAudio);
             break;
     }
 }
@@ -752,8 +711,7 @@ function createSpecialEffects(linesCleared) {
     const centerX = COLS / 2;
     const centerY = ROWS / 3; // Position higher on the screen
     
-    // Play sound effect
-    playSound(clearAudio);
+    
     
     switch (linesCleared) {
         case 2: // Double line
@@ -874,8 +832,7 @@ function createSpawnEffect(piece) {
 function gameOver() {
     gameActive = false;
     
-    // Play game over sound
-    playSound(gameOverAudio);
+    
     
     // Create game over overlay
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -905,29 +862,22 @@ function handleKeyPress(event) {
             currentPiece.pos.x--;
             if (collide()) {
                 currentPiece.pos.x++;
-            } else {
-                playSound(moveAudio);
             }
             break;
         case 39: // Right arrow
             currentPiece.pos.x++;
             if (collide()) {
                 currentPiece.pos.x--;
-            } else {
-                playSound(moveAudio);
             }
             break;
         case 40: // Down arrow
             dropPiece();
-            playSound(dropAudio);
             break;
         case 38: // Up arrow
             rotatePiece();
-            playSound(rotateAudio);
             break;
         case 32: // Space
             hardDrop();
-            playSound(dropAudio);
             break;
     }
 }
@@ -1011,22 +961,6 @@ function restartGame() {
     }
 }
 
-// Toggle sound
-function toggleSound() {
-    soundEnabled = !soundEnabled;
-    soundButton.textContent = soundEnabled ? 'Звук: Вкл' : 'Звук: Выкл';
-    
-    // Control background music
-    if (soundEnabled) {
-        backgroundAudio.play().catch(e => console.log("Audio play error:", e));
-    } else {
-        backgroundAudio.pause();
-    }
-    
-    // Save settings
-    saveSettings();
-}
-
 // Toggle fullscreen mode
 function toggleFullscreen() {
     const elem = document.documentElement;
@@ -1061,19 +995,6 @@ function toggleFullscreen() {
         if (fullscreenButton) {
             fullscreenButton.textContent = 'Полный экран';
         }
-    }
-}
-
-// Play sound effect
-function playSound(sound) {
-    if (soundEnabled) {
-        // Create a new audio instance to allow overlapping sounds
-        const soundEffect = sound.cloneNode();
-        soundEffect.volume = sound.volume;
-        soundEffect.play().catch(e => {
-            // Не выводим ошибки в консоль, чтобы не засорять её
-            // console.log("Sound effect error:", e);
-        });
     }
 }
 
